@@ -1,14 +1,15 @@
 import React from 'react'
 import {Box, Title, Text, createStyles} from "@mantine/core"
 
-type Props = {
+export type BlogType = {
     title?: string,
     body?: string,
+    date: string
 }
 
-export default function Blog({title = "", body = ""}: Props) {
+export default function Blog({title = "", body = "", date = ""}: BlogType) {
     const {classes} = useStyles();
-    let today = new Date().toLocaleDateString()
+    
   return (
     <Box className={classes.blogWrapper}>
         <Box className={classes.mainContentWrapper}>
@@ -16,7 +17,7 @@ export default function Blog({title = "", body = ""}: Props) {
             <Text size="lg">{body}</Text>
         </Box>
         <Box className={classes.subContentWrapper}>
-            <Text align="right" className={classes.dateText}>Posted {today}</Text>
+            <Text align="right" className={classes.dateText}>Posted {date}</Text>
         </Box>
     </Box>
   )
@@ -29,6 +30,7 @@ const useStyles = createStyles(() => ({
         padding: "1rem",
         backgroundColor: "black",
         borderRadius: "30px",
+        marginBottom: "4rem"
     },
     mainContentWrapper: {
         backgroundColor: "white",
