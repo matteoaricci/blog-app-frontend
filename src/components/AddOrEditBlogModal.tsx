@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Modal, TextInput, Textarea, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { BlogType } from "./Blog";
@@ -24,11 +24,14 @@ export default function AddOrEditBlogModal({
   });
 
   useEffect(() => {
-    if (editValues) {
-      form.setValues({ title: editValues.title, body: editValues.body });
-    } else {
-      form.setValues({ title: "", body: "" });
-    }
+    const setFormValues = () => {
+      if (editValues) {
+        form.setValues({ title: editValues.title, body: editValues.body });
+      } else {
+        form.setValues({ title: "", body: "" });
+      }
+    };
+    setFormValues();
   }, [editValues]);
 
   const handleSubmit = (values: typeof form.values) => {
