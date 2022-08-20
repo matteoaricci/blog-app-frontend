@@ -23,9 +23,19 @@ export default function NewUser({}: Props) {
       email: "",
       username: "",
       password: "",
+      confirmPassword: "",
     },
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      email: (value) =>
+        value.length === 0
+          ? "Email is required"
+          : !/^\S+@\S+$/.test(value)
+          ? "Invalid email"
+          : null,
+      username: (value) => (value.length === 0 ? "Username is required" : null),
+      password: (value) => (value.length === 0 ? "Password is required" : null),
+      confirmPassword: (value, values) =>
+        value !== values.password ? "Passwords do not match" : null,
     },
   });
 
@@ -33,17 +43,23 @@ export default function NewUser({}: Props) {
     <Box>
       <form onSubmit={form.onSubmit((values) => console.log(values))}>
         <Stepper active={active} onStepClick={setActive} breakpoint="sm">
-          <Stepper.Step
-            label="First step"
-            description="Create an account"
-          ></Stepper.Step>
-          <TextInput
-            label="Email"
-            placeholder="your@email.com"
-            {...form.getInputProps("email")}
-          />
-          <TextInput label="Username" {...form.getInputProps("username")} />
-          <PasswordInput label="Password" {...form.getInputProps("password")} />
+          <Stepper.Step label="First step" description="Create an account">
+            <TextInput
+              label="Email"
+              placeholder="your@email.com"
+              {...form.getInputProps("email")}
+            />
+            <TextInput label="Username" {...form.getInputProps("username")} />
+            <PasswordInput
+              label="Password"
+              {...form.getInputProps("password")}
+            />
+            <PasswordInput
+              label="Confirm Password"
+              {...form.getInputProps("confirmPassword")}
+            />
+          </Stepper.Step>
+
           <Stepper.Step label="Second step" description="Interests">
             Step 2 content: Verify email
           </Stepper.Step>
@@ -51,7 +67,7 @@ export default function NewUser({}: Props) {
             Step 3 content: Get full access
           </Stepper.Step>
           <Stepper.Completed>
-            <Button>Submit</Button>
+            <Button type="submit">Submit</Button>
           </Stepper.Completed>
         </Stepper>
       </form>
