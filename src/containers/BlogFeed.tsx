@@ -11,7 +11,9 @@ export default function BlogFeed({}: Props) {
   const [blogToEdit, setBlogToEdit] = useState<BlogType>();
 
   useEffect(() => {
-    setBlogs(dummyBlogs);
+    fetch("http://localhost:3000/blogs")
+      .then((res) => res.json())
+      .then(setBlogs);
   }, []);
 
   const handleBlogAddOrEditClick = (blogId?: number) => {
@@ -34,6 +36,11 @@ export default function BlogFeed({}: Props) {
       const updatedBlog = blogToEdit;
       updatedBlog.title = title;
       updatedBlog.body = body;
+      fetch("http://localhost:3000/blogs/" + blogToEdit.id, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedBlog)
+      }).then(res => res.json()).then(console.log)
       setBlogs(
         blogs.map((blog) => {
           return blog.id === updatedBlog.id ? updatedBlog : blog;
@@ -46,6 +53,13 @@ export default function BlogFeed({}: Props) {
         title: title,
         body: body,
       };
+      fetch("http://localhost:3000/blogs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newBlog),
+      })
+        .then((res) => res.json())
+        .then(console.log);
       setBlogs([newBlog, ...blogs]);
     }
     handleAddEditOnClose();
@@ -75,10 +89,3 @@ const lorem =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
 let today = new Date().toLocaleDateString();
-
-const dummyBlogs = [
-  { id: 1, title: "Title Goes Here", body: lorem, date: today },
-  { id: 2, title: "Title Goes Here", body: lorem, date: today },
-  { id: 3, title: "Title Goes Here", body: lorem, date: today },
-  { id: 4, title: "Title Goes Here", body: lorem, date: today },
-];
