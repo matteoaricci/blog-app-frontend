@@ -1,57 +1,60 @@
-import React, { useState } from "react";
-import { Group, createStyles } from "@mantine/core";
+import React, { useState, useEffect } from "react";
+import { Group, NavLink, createStyles } from "@mantine/core";
 import { Home, MessageDots, Settings } from "tabler-icons-react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 
 type Props = {};
 
 const iconSize = 50;
 
-type ActiveTypes = "home" | "messages" | "settings";
+type ActiveTypes = "/messages" | "/settings" | "/";
 
 export default function LeftNav({}: Props) {
   const { classes, cx } = useStyles();
   const [active, setActive] = useState("");
+  const location = useLocation();
 
-  const handleIconClick = (type: ActiveTypes) => {
-    setActive(type);
-  };
+  const navLinks = [
+    {
+      pathname: "/",
+      icon: Home,
+      label: "Home",
+      description: "Homepage",
+    },
+    {
+      pathname: "/messages",
+      icon: MessageDots,
+      label: "Messages",
+      description: "Read Messages",
+    },
+    {
+      pathname: "/settings",
+      icon: Settings,
+      label: "Settings",
+      description: "Configure Settings",
+    },
+  ];
+
+  useEffect(() => {
+    setActive(location.pathname);
+  }, [location]);
 
   return (
     <>
       <Group className={classes.leftNavWrapper}>
-      <div
-          className={cx(classes.icon, {
-            [classes.active]: active === "home",
-          })}
-          onClick={() => handleIconClick("home")}
-        >
-          <Home
-            color={active === "home" ? "white" : "black"}
-            size={iconSize}
+        {navLinks.map((link) => (
+          <NavLink
+            className={cx(classes.link, {active: location.pathname === link.pathname}) }
+            component={Link}
+            icon={<link.icon size={40} />}
+            to={link.pathname}
+            label={link.label}
+            description={link.description}
+            active={location.pathname === link.pathname}
+            variant="filled"
+            color="indigo"
           />
-        </div>
-        <div
-          className={cx(classes.icon, {
-            [classes.active]: active === "messages",
-          })}
-          onClick={() => handleIconClick("messages")}
-        >
-          <MessageDots
-            color={active === "messages" ? "white" : "black"}
-            size={iconSize}
-          />
-        </div>
-        <div
-          className={cx(classes.icon, {
-            [classes.active]: active === "settings",
-          })}
-          onClick={() => handleIconClick("settings")}
-        >
-          <Settings
-            color={active === "settings" ? "white" : "black"}
-            size={iconSize}
-          />
-        </div>
+        ))}
       </Group>
     </>
   );
@@ -59,28 +62,22 @@ export default function LeftNav({}: Props) {
 
 const useStyles = createStyles(() => ({
   leftNavWrapper: {
-    width: "150px",
+    width: "175px",
     position: "fixed",
     height: "100vh",
     display: "flex",
     flexDirection: "column",
     alignContent: "center",
     left: 0,
-    paddingTop: "10%",
+    paddingTop: "170px",
     backgroundColor: "white",
     zIndex: 10,
+    flexShrink: 0,
   },
-  icon: {
-    width: "75px",
-    height: "75px",
-    borderRadius: "50%",
-    border: "7px solid black",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    cursor: "pointer",
+  link: {
+    borderRadius: "0 10px 10px 0"
   },
   active: {
-    backgroundColor: "black",
+    borderRadius: "10px"
   },
 }));
