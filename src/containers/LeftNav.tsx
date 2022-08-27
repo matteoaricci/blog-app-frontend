@@ -1,16 +1,57 @@
-import React from "react";
-import { Drawer, Group, createStyles } from "@mantine/core";
+import React, { useState } from "react";
+import { Group, createStyles } from "@mantine/core";
+import { Home, MessageDots, Settings } from "tabler-icons-react";
 
 type Props = {};
 
+const iconSize = 50;
+
+type ActiveTypes = "home" | "messages" | "settings";
+
 export default function LeftNav({}: Props) {
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
+  const [active, setActive] = useState("");
+
+  const handleIconClick = (type: ActiveTypes) => {
+    setActive(type);
+  };
+
   return (
     <>
       <Group className={classes.leftNavWrapper}>
-        {["M", "S"].map((item) => (
-          <div className={classes.leftNavItem}>{item}</div>
-        ))}
+      <div
+          className={cx(classes.icon, {
+            [classes.active]: active === "home",
+          })}
+          onClick={() => handleIconClick("home")}
+        >
+          <Home
+            color={active === "home" ? "white" : "black"}
+            size={iconSize}
+          />
+        </div>
+        <div
+          className={cx(classes.icon, {
+            [classes.active]: active === "messages",
+          })}
+          onClick={() => handleIconClick("messages")}
+        >
+          <MessageDots
+            color={active === "messages" ? "white" : "black"}
+            size={iconSize}
+          />
+        </div>
+        <div
+          className={cx(classes.icon, {
+            [classes.active]: active === "settings",
+          })}
+          onClick={() => handleIconClick("settings")}
+        >
+          <Settings
+            color={active === "settings" ? "white" : "black"}
+            size={iconSize}
+          />
+        </div>
       </Group>
     </>
   );
@@ -18,16 +59,28 @@ export default function LeftNav({}: Props) {
 
 const useStyles = createStyles(() => ({
   leftNavWrapper: {
-    width: "100px",
-    position: "absolute",
+    width: "150px",
+    position: "fixed",
+    height: "100vh",
     display: "flex",
     flexDirection: "column",
     alignContent: "center",
     left: 0,
+    paddingTop: "10%",
+    backgroundColor: "white",
+    zIndex: 10,
   },
-  leftNavItem: {
-    width: "50px",
-    height: "50px",
+  icon: {
+    width: "75px",
+    height: "75px",
     borderRadius: "50%",
+    border: "7px solid black",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: "pointer",
+  },
+  active: {
+    backgroundColor: "black",
   },
 }));
